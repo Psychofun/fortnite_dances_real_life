@@ -2,4 +2,6 @@
 Dance as Fortnite players using Artificial Intelligence.
 
 
-Based on [nyoki-mtl](https://github.com/nyoki-mtl/pytorch-EverybodyDanceNow#pytorch-everybodydancenow) implementation of [Everybody Dance Now](https://arxiv.org/abs/1808.07371)
+![*Example dances*](https://github.com/Psychofun/fortnite_dances_real_life/media/dances.gif "Logo Title Text 1")
+
+Based on [nyoki-mtl](https://github.com/nyoki-mtl/pytorch-EverybodyDanceNow#pytorch-everybodydancenow) implementation of [Everybody Dance Now](https://arxiv.org/abs/1808.07371) paper.
