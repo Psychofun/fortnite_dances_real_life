@@ -2,6 +2,8 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 from matplotlib.animation import FFMpegWriter
+from PIL import Image
+
 
 import torch
 from tqdm import tqdm
@@ -46,9 +48,9 @@ def make_video_animation(num_frames ,  animation_function, output_name,fps = 30)
 
 def skeleton_frame(idx):
 		img_path = img_dir.joinpath('{:05d}.png'.format(idx))
-		print("Image path", img_path)
+		
 		img = cv2.imread(str(img_path))
-		print("Image shape", img.shape)
+		
 		shape_dst = np.min(img.shape[:2])
 		oh = (img.shape[0] - shape_dst) // 2
 		ow = (img.shape[1] - shape_dst) // 2
@@ -65,18 +67,44 @@ def skeleton_frame(idx):
 		param = {'thre1': 0.1, 'thre2': 0.05, 'thre3': 0.5}
 		label, cord = get_pose(param, heatmap, paf)
 		
+		mask  = label[:,:] > 0 
+
+		intensity = .80
+		img[mask,:] = int(255*intensity)
 		
-		overlay_image = cv2.addWeighted(img,0.4,label,0.1,0)
 
 		fig.clear()
-		fig.axis('off')
-		plt.imshow(overlay_image)
+		plt.axis('off')
+	
+		plt.imshow(img)
+		
 
 
+
+		
+
+
+def remove_transparency(im, bg_colour=(255, 255, 255)):
+
+    # Only process if image has transparency 
+    if im.mode in ('RGBA', 'LA') or (im.mode == 'P' and 'transparency' in im.info):
+
+        # Need to convert to RGBA if LA format due to a bug in PIL 
+        alpha = im.convert('RGBA').split()[-1]
+
+        # Create a new background image of our matt color.
+        # Must be RGBA because paste requires both images have the same format
+
+        bg = Image.new("RGBA", im.size, bg_colour + (255,))
+        bg.paste(im, mask=alpha)
+        return bg
+
+    else:
+        return im
 
 if __name__ == '__main__':
 		
-	#video_path = '../../data/source/file_name.mp4'
+	
 
 	#NETWORK CREATION 
 	weight_name = openpose_dir.joinpath('network/weight/pose_model.pth')
@@ -88,12 +116,12 @@ if __name__ == '__main__':
 	model.eval()
 
 	img_dir = Path('../../data/source/images')
-	NUM_FRAMES = 20#len(os.listdir(str(img_dir)))
+	NUM_FRAMES = len(os.listdir(str(img_dir)))
 	FPS = 30
 
 	plt.close()
 	plt.axis('off')
-	fig = plt.figure(figsize=(6.0, 6.0))
+	fig = plt.figure(figsize=(5.12, 5.12))
 	
 	make_video_animation(num_frames = NUM_FRAMES,
 						animation_function = skeleton_frame,
