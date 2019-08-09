@@ -8,3 +8,10 @@ Based on [nyoki-mtl](https://github.com/nyoki-mtl/pytorch-EverybodyDanceNow#pyto
 Use pytorch framework.
 
 
+# Visualize Pose Stick
+Can visualize pose stick representation of the person dancing.
+Use script at `/src/utils/show_skeleton_on_RGB.py` to make an example.
+First **must** have extracted **source** images and **label** images.
+![*Sample*](./media/pose_stick.gif)
+
+
