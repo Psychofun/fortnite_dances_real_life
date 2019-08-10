@@ -217,13 +217,5 @@ class NLayerDiscriminator(nn.Module):
         return  self.model(x).squeeze()
 
 
-
-
-
-
-
-
-
-
 if __name__ == "__main__":
-    model = ResnetBlock(dim = 100 , padding_type = 'reflact', norm_layer = spectral_norm, activation = nn.ReLU(True), use_dropout = False ):
+    model = ResnetBlock(dim = 100 , padding_type = 'reflact', norm_layer = spectral_norm, activation = nn.ReLU(True), use_dropout = False )

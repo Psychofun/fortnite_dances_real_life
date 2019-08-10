@@ -40,11 +40,14 @@ label_dir =  '../data/target/train/train_label'
 print('Prepare test_real....')
 
 train_imgs = os.listdir(train_dir)
+NUM_FRAMES = len(train_imgs)
 
-for img_idx in tqdm(range(len( train_imgs))):
+for img_idx in tqdm(range(20)):
 
     path_img = os.path.join( train_dir,'{:05}.png'.format(img_idx))
     img = cv2.imread(  path_img  )
+    #print("Path:", path_img)
+    #print("Shape Image:", img.shape )
     
     path_label = os.path.join(  label_dir , '{:05}.png'.format(img_idx) )
     label = cv2.imread(path_label)
@@ -59,6 +62,9 @@ for img_idx in tqdm(range(len( train_imgs))):
 
     path_test_label = os.path.join(str(test_label), '{:05}.png'.format(img_idx))
     cv2.imwrite(path_test_label, label)
+    
+    
+    
 
 
 print('Prepare test_sync. . .')
@@ -93,11 +99,7 @@ opt.dataroot='../data/target/'
 opt.name='target'
 opt.nThreads=0
 opt.results_dir='./prepare/'
-
-
-
-
-
+opt.use_encoded_image = False 
 
 iter_path = os.path.join(opt.checkpoints_dir, opt.name, 'iter.txt')
 
@@ -107,6 +109,29 @@ visualizer = Visualizer(opt)
 
 web_dir = os.path.join(opt.results_dir, opt.name, '%s_%s' % (opt.phase, opt.which_epoch))
 webpage = html.HTML(web_dir, 'Experiment = %s, Phase = %s, Epoch = %s' % (opt.name, opt.phase, opt.which_epoch))
+
+
+
+
+
+print("Memory use:")
+ma = torch.cuda.memory_allocated()
+print(ma)
+
+mc = torch.cuda.memory_cached()
+print(mc)
+
+torch.cuda.empty_cache()
+
+ma = torch.cuda.memory_allocated()
+print(ma)
+
+mc = torch.cuda.memory_cached()
+print(mc)
+
+
+
+
 
 model = create_model(opt)
 
@@ -123,5 +148,10 @@ torch.cuda.empty_cache()
 print('Copy the synthesized images...')
 synthesized_image_dir = './prepare/target/test_latest/images/'
 for img_idx in tqdm(range(len(os.listdir(synthesized_image_dir)))):
-    img = cv2.imread(synthesized_image_dir+' {:05}_synthesized_image.jpg'.format(img_idx))
-    cv2.imwrite(str(test_sync_dir) + '{:05}.png'.format(img_idx), img)
+    path = os.path.join(synthesized_image_dir , '{:05}_synthesized_image.jpg'.format(img_idx))
+    #print("Path", path)
+    img = cv2.imread(path)
+
+    path_syn =os.path.join(str(test_sync_dir),'{:05}.png'.format(img_idx))
+    #print("Path syn", path_syn)
+    cv2.imwrite(path_syn, img)
